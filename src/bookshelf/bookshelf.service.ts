@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBookshelfDto } from './dto/create-bookshelf.dto';
 import { UpdateBookshelfDto } from './dto/update-bookshelf.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class BookshelfService {
+  constructor(private prisma: PrismaService) {
+
+  }
   create(createBookshelfDto: CreateBookshelfDto) {
     return 'This action adds a new bookshelf';
   }
