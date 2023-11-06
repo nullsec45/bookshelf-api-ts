@@ -5,11 +5,11 @@ import { UpdateBookshelfDto } from './dto/update-bookshelf.dto';
 
 @Controller('bookshelf')
 export class BookshelfController {
-  constructor(private readonly bookshelfService: BookshelfService) {}
+  constructor(private readonly bookshelfService: BookshelfService) { }
 
   @Post()
-  create(@Body() createBookshelfDto: CreateBookshelfDto) {
-    return this.bookshelfService.create(createBookshelfDto);
+  async create(@Body() createBookshelfDto: CreateBookshelfDto) {
+    return await this.bookshelfService.create(createBookshelfDto);
   }
 
   @Get()
