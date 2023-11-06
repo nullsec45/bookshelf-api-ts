@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { BookshelfService } from './bookshelf.service';
 import { BookshelfController } from './bookshelf.controller';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [BookshelfController],
   providers: [BookshelfService],
 })
-export class BookshelfModule {}
+export class BookshelfModule { }
