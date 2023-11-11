@@ -10,13 +10,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Bookshelf{
-  Id Int @default(autoincrement()) @id
-  Judul String @unique
-  Penulis String
-  TanggalTerbit DateTime
-  IsCompleted Boolean @default(false)
-  HalamanTerakhir Int @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @updatedAt  
+model Users {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  name       String
+  password   String
+  active     Boolean      @default(false)
+  created_at DateTime     @default(now())
+  updated_at DateTime?    @updatedAt
+  Bookshelfs Bookshelfs[]
+}
+
+model Bookshelfs {
+  id               Int       @id @default(autoincrement())
+  user             Users     @relation(fields: [user_id], references: [id])
+  user_id          Int
+  judul            String    @unique
+  penulis          String
+  tanggal_terbit   DateTime
+  is_completed     Boolean   @default(false)
+  halaman_terakhir Int       @default(0)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime? @updatedAt
 }
