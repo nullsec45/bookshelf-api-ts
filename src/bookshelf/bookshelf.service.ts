@@ -10,15 +10,15 @@ export class BookshelfService {
 
   }
   async create(createBookshelfDto: CreateBookshelfDto) {
-    const { TanggalTerbit, ...bookShelf } = createBookshelfDto;
-    const iso8601Date = new Date(TanggalTerbit).toISOString();
+    const { tanggal_terbit, ...bookShelfs } = createBookshelfDto;
+    const iso8601Date = new Date(tanggal_terbit).toISOString();
 
 
-    const createdData = await this.prisma.bookshelf.create({
+    const createdData = await this.prisma.bookshelfs.create({
       data: {
-        ...bookShelf,
-        TanggalTerbit: iso8601Date,
-        IsCompleted: createBookshelfDto.IsCompleted.valueOf()
+        ...bookShelfs,
+        tanggal_terbit: iso8601Date,
+        is_completed: createBookshelfDto.is_completed.valueOf()
       }
     });
 
@@ -29,7 +29,7 @@ export class BookshelfService {
   }
 
   async findAll() {
-    const dataBookshelf = await this.prisma.bookshelf.findMany({});
+    const dataBookshelf = await this.prisma.bookshelfs.findMany({});
 
     return {
       statusCode: 200,
@@ -38,9 +38,9 @@ export class BookshelfService {
   }
 
   async findOne(id: number) {
-    const dataBookshelf = await this.prisma.bookshelf.findFirst({
+    const dataBookshelf = await this.prisma.bookshelfs.findFirst({
       where: {
-        Id: id,
+        id: id,
       }
     });
 
@@ -58,17 +58,17 @@ export class BookshelfService {
   }
 
   async update(id: number, updateBookshelfDto: UpdateBookshelfDto) {
-    const { TanggalTerbit, ...bookShelf } = updateBookshelfDto;
-    const iso8601Date = new Date(TanggalTerbit).toISOString();
+    const { tanggal_terbit, ...bookShelf } = updateBookshelfDto;
+    const iso8601Date = new Date(tanggal_terbit).toISOString();
 
-    const updateBookShelf = await this.prisma.bookshelf.update({
+    const updateBookShelf = await this.prisma.bookshelfs.update({
       data: {
         ...bookShelf,
-        TanggalTerbit: iso8601Date,
-        IsCompleted: updateBookshelfDto.IsCompleted.valueOf()
+        tanggal_terbit: iso8601Date,
+        is_completed: updateBookshelfDto.is_completed.valueOf()
       },
       where: {
-        Id: id,
+        id: id,
       }
     })
 
@@ -79,9 +79,9 @@ export class BookshelfService {
   }
 
   async remove(id: number) {
-    const bookShelf = await this.prisma.bookshelf.delete({
+    const bookShelf = await this.prisma.bookshelfs.delete({
       where: {
-        Id: id,
+        id: id,
       },
     });
     return {
