@@ -1,23 +1,27 @@
-import { IsString, IsDateString, IsBoolean, IsNotEmpty, IsISO8601, IsOptional } from "class-validator";
+import { IsString, IsDateString, IsBoolean, IsNotEmpty, IsISO8601, IsOptional, IsNumber } from "class-validator";
 
 export class CreateBookshelfDto {
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
-    Judul: string;
+    user_id: number;
 
     @IsString()
     @IsNotEmpty()
-    Penulis: string;
+    judul: string;
+
+    @IsString()
+    @IsNotEmpty()
+    penulis: string;
 
     // @IsDateString()
     @IsNotEmpty()
-    TanggalTerbit: Date;
+    tanggal_terbit: Date;
 
     @IsBoolean()
     @IsNotEmpty()
-    IsCompleted: Boolean;
+    is_completed: Boolean;
 
     @IsOptional()
-    HalamanTerakhir?: number;
+    halaman_terakhir?: number;
 
 }
