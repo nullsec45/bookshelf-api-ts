@@ -1,47 +1,66 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { BookshelfService } from './bookshelf.service';
 import { CreateBookshelfDto } from './dto/create-bookshelf.dto';
 import { UpdateBookshelfDto } from './dto/update-bookshelf.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
+import { AuthenticatedRequest } from 'typings';
 
-
+@UseGuards(AuthenticatedGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('bookshelf')
 export class BookshelfController {
   constructor(private readonly bookshelfService: BookshelfService) { }
 
-  @UseGuards(AuthenticatedGuard)
-  @UseGuards(JwtAuthGuard)
+
   @Post()
-  async create(@Body() createBookshelfDto: CreateBookshelfDto) {
-    return await this.bookshelfService.create(createBookshelfDto);
+  async create(
+    @Body() createBookshelfDto: CreateBookshelfDto,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const userId = req.user.sub;
+
+    return await this.bookshelfService.create({
+      ...createBookshelfDto,
+      user_id: userId,
+    });
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.bookshelfService.findAll();
+  findAll(
+    @Req() req: AuthenticatedRequest
+  ) {
+    const userId = req.user.sub;
+    return this.bookshelfService.findAll(userId);
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bookshelfService.findOne(+id);
+  findOne(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const userId = req.user.sub;
+
+    return this.bookshelfService.findOne(+id, userId);
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookshelfDto: UpdateBookshelfDto) {
-    return this.bookshelfService.update(+id, updateBookshelfDto);
+  update(
+    @Param('id') id: string, @Body() updateBookshelfDto: UpdateBookshelfDto,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const userId = req.user.sub;
+
+    return this.bookshelfService.update(+id, userId, updateBookshelfDto);
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.bookshelfService.remove(+id);
+  remove(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const userId = req.user.sub;
+
+    return this.bookshelfService.remove(+id, userId);
   }
 }
