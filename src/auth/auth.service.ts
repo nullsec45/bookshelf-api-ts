@@ -3,6 +3,8 @@ import { UsersService } from "src/users/users.service";
 import { AuthDto } from './dto/auth.dto';
 import { compare } from "bcryptjs";
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../../typings';
+
 
 @Injectable()
 export class AuthService {
@@ -11,32 +13,27 @@ export class AuthService {
     private jwtService: JwtService
   ) { }
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.findByEmail(email)
 
-    if (user && (await compare(user.password, password))) {
-      const { email, password, ...result } = user;
-      return user;
+    if (user && (await compare(password, user.password))) {
+      const { password, created_at, updated_at, ...result } = user;
+      return result;
     }
 
     return null;
   }
 
-  async login(authDto: AuthDto) {
-    const user = await this.userService.findByEmail(authDto.email)
-
-    if (user && (await compare(authDto.password, user.password))) {
-      const { password, ...result } = user;
-      const payload = { sub: result.id, username: result.email }
-      return {
-        access_token: await this.jwtService.signAsync(payload, {
-          secret: 'Ayamgoreng77',
-          expiresIn: '60S'
-        })
-      }
+  async login(user: User) {
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      username: user.name,
     };
 
-    throw new UnauthorizedException();
+    return this.jwtService.sign(payload);
+
+    // throw new UnauthorizedException();
   }
 }
 
