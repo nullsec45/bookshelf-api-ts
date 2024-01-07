@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Req, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -7,11 +7,17 @@ import { LocalAuthGuard } from './local-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  // @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post("login")
-  login(@Body() authDto: AuthDto) {
-    return this.authService.login(authDto);
+  async login(@Req() req: any) {
+    const accessToken = await this.authService.login(req.user);
+
+    return {
+      data: {
+        accessToken,
+      },
+      statusCode: HttpStatus.OK,
+      message: 'login successfully',
+    };
   }
-
-
 }
