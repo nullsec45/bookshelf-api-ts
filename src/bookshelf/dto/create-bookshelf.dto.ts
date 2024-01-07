@@ -1,8 +1,6 @@
 import { IsString, IsDateString, IsBoolean, IsNotEmpty, IsISO8601, IsOptional, IsNumber } from "class-validator";
 
 export class CreateBookshelfDto {
-    @IsNumber()
-    @IsNotEmpty()
     user_id: number;
 
     @IsString()
